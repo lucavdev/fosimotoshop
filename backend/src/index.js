@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit");
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const orderRoutes = require("./routes/orders");
+const couponRoutes = require("./routes/coupons");
 
 const app = express();
 
@@ -47,6 +48,7 @@ const authLimiter = rateLimit({
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/coupons", couponRoutes);
 
 app.get("/", (req, res) => {
   res.json({ status: "ok", message: "MotoShop API corriendo 🏍️" });
