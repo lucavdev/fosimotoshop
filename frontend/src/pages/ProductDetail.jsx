@@ -213,7 +213,7 @@ const ProductDetail = () => {
 };
 
 const styles = {
-  page: { padding: "24px clamp(16px, 3vw, 48px)", maxWidth: 1200, margin: "0 auto", minHeight: "80vh" },
+  page: { padding: "24px clamp(12px, 3vw, 48px)", maxWidth: 1200, margin: "0 auto", minHeight: "80vh" },
   loading: { display: "flex", justifyContent: "center", alignItems: "center", height: 400 },
   errorBox: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: 400, color: "#aaa", gap: 16 },
   backBtn: { background: "#ff3c00", border: "none", color: "#fff", padding: "10px 24px", borderRadius: 8, cursor: "pointer", fontSize: 14, fontFamily: "inherit", marginTop: 8 },
@@ -222,7 +222,7 @@ const styles = {
   breadSep: { color: "#444", fontSize: 12 },
   breadCurrent: { color: "#aaa", fontSize: 13 },
 
-  layout: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40, alignItems: "start", marginBottom: 56 },
+  layout: { display: "grid", gridTemplateColumns: "clamp(280px, 45%, 560px) 1fr", gap: 40, alignItems: "start", marginBottom: 56 },
 
   // Gallery
   galleryCol: { display: "flex", flexDirection: "column", gap: 12, position: "sticky", top: 80 },
@@ -270,16 +270,6 @@ const styles = {
   relatedGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 },
 };
 
-// Responsive layout
-const styleTag = document.createElement("style");
-styleTag.textContent = `
-  @media (max-width: 768px) {
-    .product-detail-layout { grid-template-columns: 1fr !important; }
-  }
-`;
-if (!document.head.querySelector("[data-detail-styles]")) {
-  styleTag.setAttribute("data-detail-styles", "1");
-  document.head.appendChild(styleTag);
-}
+// Responsive layout — handled by index.css media queries on gridTemplateColumns
 
 export default ProductDetail;
