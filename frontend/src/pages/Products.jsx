@@ -105,7 +105,7 @@ const Products = () => {
   const FilterContent = () => (
     <div className="products-filter-content">
       <div className="products-filter-header">
-        <span className="products-filter-title">🎚 Filtros</span>
+        <span className="products-filter-title">Filtros</span>
         {hasFilters && (
           <button onClick={clearFilters} className="products-filter-clear">Limpiar</button>
         )}
@@ -210,7 +210,7 @@ const Products = () => {
           className={`products-filter-toggle ${activeFilterCount > 0 ? "products-filter-toggle--active" : ""}`}
           onClick={() => setFilterOpen(true)}
         >
-          🎚 Filtros
+          Filtros
           {activeFilterCount > 0 && (
             <span className="products-filter-badge">{activeFilterCount}</span>
           )}
@@ -271,7 +271,7 @@ const Products = () => {
         </div>
       ) : products.length === 0 ? (
         <div className="products-empty">
-          <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+          <div style={{ fontSize: 48, marginBottom: 12 }}></div>
           <p>No se encontraron productos con esos filtros.</p>
           <button onClick={clearFilters} className="products-empty-btn">Limpiar filtros</button>
         </div>

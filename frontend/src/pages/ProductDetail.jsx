@@ -53,7 +53,6 @@ const ProductDetail = () => {
   if (error) return (
     <div style={styles.page}>
       <div style={styles.errorBox}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>😕</div>
         <h2>{error}</h2>
         <button onClick={() => navigate("/products")} style={styles.backBtn}>← Volver al catálogo</button>
       </div>

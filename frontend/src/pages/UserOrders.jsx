@@ -81,7 +81,7 @@ const UserOrders = () => {
                   <div style={styles.orderDetail} className="fade-in">
                     {/* Items */}
                     <div style={styles.detailSection}>
-                      <div style={styles.detailSectionTitle}>🛍 Productos</div>
+                      <div style={styles.detailSectionTitle}>Productos</div>
                       <div style={styles.itemGrid}>
                         {order.items?.map((item) => (
                           <div key={item.id} style={styles.orderItem}>
@@ -122,7 +122,7 @@ const UserOrders = () => {
                         {order.postalCode && <div style={styles.infoRow}><span style={styles.infoKey}>Cód. Postal</span><span style={styles.infoVal}>{order.postalCode}</span></div>}
                       </div>
                       <div style={styles.infoCard}>
-                        <div style={styles.infoCardTitle}>💰 Resumen</div>
+                        <div style={styles.infoCardTitle}>Resumen</div>
                         {order.couponCode && (
                           <div style={styles.infoRow}>
                             <span style={styles.infoKey}>Cupón</span>

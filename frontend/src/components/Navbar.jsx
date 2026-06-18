@@ -39,7 +39,7 @@ const Navbar = ({ toggleCart }) => {
       <nav className="navbar">
         {/* Logo */}
         <Link to="/" className="navbar__logo" onClick={closeMobile}>
-          🏍️ <span className="navbar__logo-text">FosiMotoShop MX</span>
+          <span className="navbar__logo-text">FosiMotoShop MX</span>
         </Link>
 
         {/* Desktop links — hidden on mobile via CSS */}
@@ -74,7 +74,7 @@ const Navbar = ({ toggleCart }) => {
                     <div className="navbar__dropdown-email">{user.email}</div>
                     <div className="navbar__dropdown-divider" />
                     <Link to="/orders" onClick={() => setMenuOpen(false)} className="navbar__dropdown-link">
-                      📦 Mis Órdenes
+                      Mis Órdenes
                     </Link>
                     <div className="navbar__dropdown-divider" />
                     <button onClick={handleLogout} className="navbar__dropdown-logout">
@@ -107,10 +107,10 @@ const Navbar = ({ toggleCart }) => {
       <div className={`navbar__mobile-drawer ${mobileOpen ? "navbar__mobile-drawer--open" : ""}`}>
         <nav className="navbar__mobile-nav">
           <Link to="/" className="navbar__mobile-link" onClick={closeMobile}>
-            <span className="navbar__mobile-link-icon">🏠</span> Inicio
+            Inicio
           </Link>
           <Link to="/products" className="navbar__mobile-link" onClick={closeMobile}>
-            <span className="navbar__mobile-link-icon">🛍️</span> Productos
+            Productos
           </Link>
           {isLogged && (
             <Link to="/orders" className="navbar__mobile-link" onClick={closeMobile}>
@@ -132,7 +132,7 @@ const Navbar = ({ toggleCart }) => {
                 <span className="navbar__mobile-user-email">{user.email}</span>
               </div>
               <button onClick={handleLogout} className="navbar__mobile-link navbar__mobile-link--logout">
-                <span className="navbar__mobile-link-icon">🚪</span> Cerrar sesión
+                Cerrar sesión
               </button>
             </>
           ) : (

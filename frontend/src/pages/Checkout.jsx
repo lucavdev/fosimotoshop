@@ -7,9 +7,9 @@ import { validateCoupon } from "../api";
 const SHIPPING_COST = 15000;
 
 const PAYMENT_METHODS = [
-  { id: "transferencia", icon: "🏦", label: "Transferencia bancaria", sub: "CBU / CVU · Sin recargo" },
-  { id: "debito", icon: "💳", label: "Tarjeta de débito", sub: "Sin recargo" },
-  { id: "credito", icon: "💰", label: "Tarjeta de crédito", sub: "Hasta 3 cuotas sin interés" },
+  { id: "transferencia", label: "Transferencia bancaria", sub: "CBU / CVU · Sin recargo" },
+  { id: "debito", label: "Tarjeta de débito", sub: "Sin recargo" },
+  { id: "credito", label: "Tarjeta de crédito", sub: "Hasta 3 cuotas sin interés" },
 ];
 
 const Checkout = () => {
@@ -22,6 +22,7 @@ const Checkout = () => {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState(null);
+  const [finalTotal, setFinalTotal] = useState(0); // snapshot before cart is cleared
 
   // Payment
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -101,16 +102,19 @@ const Checkout = () => {
     if (!canConfirm()) { setMsg("Completá todos los campos requeridos."); return; }
     setLoading(true);
     setMsg(null);
+    // Snapshot total before checkout() calls clearCart() and resets subtotal to 0
+    const snapshotTotal = totalWithShipping;
     const result = await checkout({ shippingType, province, city, address, postalCode, couponCode, paymentMethod, nombre, dni });
     setLoading(false);
-    if (result.success) setDone(true);
-    else setMsg(result.message);
+    if (result.success) {
+      setFinalTotal(snapshotTotal);
+      setDone(true);
+    } else setMsg(result.message);
   };
 
   if (!isLogged) return (
     <div style={styles.page}>
       <div style={styles.emptyState}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
         <h2 style={styles.emptyTitle}>Iniciá sesión para continuar</h2>
         <p style={styles.emptySub}>Necesitás una cuenta para finalizar tu compra.</p>
         <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
@@ -124,7 +128,6 @@ const Checkout = () => {
   if (items.length === 0 && !done) return (
     <div style={styles.page}>
       <div style={styles.emptyState}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🛒</div>
         <h2 style={styles.emptyTitle}>Tu carrito está vacío</h2>
         <p style={styles.emptySub}>Agregá productos antes de continuar.</p>
         <Link to="/products" style={{ ...styles.mainBtn, marginTop: 24 }}>Ver productos</Link>
@@ -135,7 +138,7 @@ const Checkout = () => {
   if (done) return (
     <div style={styles.page}>
       <div style={styles.emptyState}>
-        <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+        <div style={styles.successIcon}>✓</div>
         <h2 style={{ ...styles.emptyTitle, color: "#34d399" }}>¡Pedido confirmado!</h2>
         <p style={styles.emptySub}>
           {shippingType === "correo"
@@ -145,7 +148,7 @@ const Checkout = () => {
         <div style={{ ...styles.successCard, marginTop: 24 }}>
           <div style={styles.successRow}><span style={styles.successLabel}>Método de pago</span><span style={styles.successVal}>{PAYMENT_METHODS.find(p => p.id === paymentMethod)?.label}</span></div>
           <div style={styles.successRow}><span style={styles.successLabel}>Envío</span><span style={styles.successVal}>{shippingType === "correo" ? "Correo Argentino" : "Retiro en sucursal"}</span></div>
-          <div style={styles.successRow}><span style={styles.successLabel}>Total abonado</span><span style={{ ...styles.successVal, color: "#fff", fontWeight: 800 }}>${Math.round(totalWithShipping).toLocaleString()}</span></div>
+          <div style={styles.successRow}><span style={styles.successLabel}>Total abonado</span><span style={{ ...styles.successVal, color: "#fff", fontWeight: 800 }}>${Math.round(finalTotal).toLocaleString()}</span></div>
         </div>
         <Link to="/" style={{ ...styles.mainBtn, marginTop: 24 }}>Volver al inicio</Link>
       </div>
@@ -180,14 +183,13 @@ const Checkout = () => {
             {/* ── STEP 1: Payment ── */}
             {step === 1 && (
               <div style={styles.card}>
-                <div style={styles.cardTitle}>💳 Método de pago</div>
+                <div style={styles.cardTitle}>Método de pago</div>
 
                 <div style={styles.methodGrid}>
                   {PAYMENT_METHODS.map((m) => (
                     <label key={m.id} style={{ ...styles.methodCard, ...(paymentMethod === m.id ? styles.methodCardActive : {}) }}
                       onClick={() => setPaymentMethod(m.id)}>
                       <input type="radio" name="payment" value={m.id} checked={paymentMethod === m.id} onChange={() => setPaymentMethod(m.id)} style={{ display: "none" }} />
-                      <span style={styles.methodIcon}>{m.icon}</span>
                       <div>
                         <div style={styles.methodLabel}>{m.label}</div>
                         <div style={styles.methodSub}>{m.sub}</div>
@@ -228,7 +230,7 @@ const Checkout = () => {
                     </div>
                     {paymentMethod === "credito" && (
                       <div style={styles.infoBox}>
-                        ℹ️ Podés abonar en hasta 3 cuotas sin interés con tarjeta de crédito.
+                        Podés abonar en hasta 3 cuotas sin interés con tarjeta de crédito.
                       </div>
                     )}
                   </div>
@@ -238,7 +240,7 @@ const Checkout = () => {
                 {paymentMethod === "transferencia" && (
                   <div style={{ marginTop: 20 }}>
                     <div style={styles.infoBox}>
-                      🏦 Realizá la transferencia al siguiente alias y adjuntá el comprobante por WhatsApp.
+                      Realizá la transferencia al siguiente alias y adjuntá el comprobante por WhatsApp.
                     </div>
                     <div style={styles.aliasBox}>
                       <span style={styles.aliasLabel}>Alias:</span>
@@ -265,7 +267,7 @@ const Checkout = () => {
                 <button onClick={() => setStep(1)} style={styles.stepBackBtn}>← Volver al pago</button>
 
                 {/* Datos personales */}
-                <div style={styles.cardTitle}>👤 Datos personales</div>
+                <div style={styles.cardTitle}>Datos personales</div>
                 <div style={styles.twoCol}>
                   <div>
                     <div style={styles.fieldLabel}>Nombre completo *</div>
@@ -278,11 +280,11 @@ const Checkout = () => {
                 </div>
 
                 {/* Tipo de envío */}
-                <div style={{ ...styles.cardTitle, marginTop: 24 }}>📦 Método de envío</div>
+                <div style={{ ...styles.cardTitle, marginTop: 24 }}>Método de envío</div>
                 <label style={{ ...styles.shippingCard, ...(shippingType === "retiro" ? styles.shippingCardActive : {}) }}>
                   <input type="radio" name="shipping" value="retiro" checked={shippingType === "retiro"} onChange={() => setShippingType("retiro")} style={{ accentColor: "#ff3c00" }} />
                   <div style={styles.shippingInfo}>
-                    <div style={styles.shippingTitle}>🏪 Retiro en sucursal</div>
+                    <div style={styles.shippingTitle}>Retiro en sucursal</div>
                     <div style={styles.shippingSub}>Gratis · Coordinamos por WhatsApp</div>
                   </div>
                   <span style={{ ...styles.shippingPrice, color: "#34d399" }}>Gratis</span>
@@ -290,7 +292,7 @@ const Checkout = () => {
                 <label style={{ ...styles.shippingCard, ...(shippingType === "correo" ? styles.shippingCardActive : {}) }}>
                   <input type="radio" name="shipping" value="correo" checked={shippingType === "correo"} onChange={() => setShippingType("correo")} style={{ accentColor: "#ff3c00" }} />
                   <div style={styles.shippingInfo}>
-                    <div style={styles.shippingTitle}>🚚 Envío por correo</div>
+                    <div style={styles.shippingTitle}>Envío por correo</div>
                     <div style={styles.shippingSub}>Correo Argentino · 5–10 días hábiles</div>
                   </div>
                   <span style={styles.shippingPrice}>${SHIPPING_COST.toLocaleString()}</span>
@@ -319,10 +321,10 @@ const Checkout = () => {
                 )}
 
                 {/* Coupon */}
-                <div style={{ ...styles.cardTitle, marginTop: 24 }}>🎟 Cupón de descuento</div>
+                <div style={{ ...styles.cardTitle, marginTop: 24 }}>Cupón de descuento</div>
                 {couponCode ? (
                   <div style={styles.couponApplied}>
-                    <span>🎟 <strong>{couponCode}</strong> · −${Math.round(couponDiscount).toLocaleString()}</span>
+                    <span><strong>{couponCode}</strong> · −${Math.round(couponDiscount).toLocaleString()}</span>
                     <button onClick={removeCoupon} style={styles.removeCoupon}>Quitar</button>
                   </div>
                 ) : (
@@ -358,16 +360,16 @@ const Checkout = () => {
             {step === 3 && (
               <div style={styles.card}>
                 <button onClick={() => setStep(2)} style={styles.stepBackBtn}>← Volver a datos y envío</button>
-                <div style={styles.cardTitle}>✅ Revisá tu pedido</div>
+                <div style={styles.cardTitle}>Revisá tu pedido</div>
 
                 <div style={styles.confirmSection}>
                   <div style={styles.confirmRow}>
                     <span style={styles.confirmLabel}>Método de pago</span>
-                    <span style={styles.confirmVal}>{PAYMENT_METHODS.find(p => p.id === paymentMethod)?.icon} {PAYMENT_METHODS.find(p => p.id === paymentMethod)?.label}</span>
+                    <span style={styles.confirmVal}>{PAYMENT_METHODS.find(p => p.id === paymentMethod)?.label}</span>
                   </div>
                   <div style={styles.confirmRow}>
                     <span style={styles.confirmLabel}>Tipo de envío</span>
-                    <span style={styles.confirmVal}>{shippingType === "correo" ? "🚚 Correo Argentino" : "🏪 Retiro en sucursal"}</span>
+                    <span style={styles.confirmVal}>{shippingType === "correo" ? "Correo Argentino" : "Retiro en sucursal"}</span>
                   </div>
                   <div style={styles.confirmRow}>
                     <span style={styles.confirmLabel}>Titular</span>
@@ -396,7 +398,7 @@ const Checkout = () => {
                 {msg && <div style={styles.errMsg}>{msg}</div>}
 
                 <button onClick={handleCheckout} disabled={loading} style={styles.buyBtn}>
-                  {loading ? "Procesando..." : "✅ Confirmar pedido"}
+                  {loading ? "Procesando..." : "Confirmar pedido"}
                 </button>
               </div>
             )}
@@ -539,6 +541,7 @@ const styles = {
   emptySub: { fontSize: 14, color: "#666", lineHeight: 1.6, maxWidth: 400 },
   mainBtn: { background: "linear-gradient(135deg, #ff3c00, #ff5722)", color: "#fff", padding: "13px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, textDecoration: "none", display: "inline-block" },
   outlineBtn: { background: "transparent", color: "#888", border: "1px solid #333", padding: "13px 28px", borderRadius: 12, fontSize: 15, fontWeight: 600, textDecoration: "none", display: "inline-block" },
+  successIcon: { width: 64, height: 64, borderRadius: "50%", background: "rgba(52,211,153,0.15)", border: "2px solid #34d399", color: "#34d399", fontSize: 28, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 },
   successCard: { background: "#111", border: "1px solid #1e1e1e", borderRadius: 16, padding: "20px 24px", width: "100%", maxWidth: 400, display: "flex", flexDirection: "column", gap: 12 },
   successRow: { display: "flex", justifyContent: "space-between", gap: 8 },
   successLabel: { fontSize: 12, color: "#666", fontWeight: 600 },

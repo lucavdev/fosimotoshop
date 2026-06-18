@@ -166,7 +166,7 @@ const Home = () => {
       <div style={styles.hero}>
         <div style={styles.heroGrid} />
         <div style={styles.heroContent}>
-          <div style={styles.heroBadge}>🏍️ FosiMotoShop MX — Tu tienda de confianza</div>
+          <div style={styles.heroBadge}>FosiMotoShop MX — Tu tienda de confianza</div>
           <h1 style={styles.heroTitle}>
             Equipamiento de<br />
             <span style={styles.heroAccent}>motocross</span> de primer nivel
@@ -203,7 +203,7 @@ const Home = () => {
         {/* Promo Carousel */}
         <section style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>🎯 Promociones</h2>
+            <h2 style={styles.sectionTitle}>Promociones</h2>
             <span style={styles.sectionSub}>Ofertas especiales seleccionadas para vos</span>
           </div>
           <Carousel slides={PROMOS} />
@@ -212,14 +212,13 @@ const Home = () => {
         {/* Categories */}
         <section style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>📂 Categorías</h2>
+            <h2 style={styles.sectionTitle}>Categorías</h2>
             <Link to="/products" style={styles.seeAll}>Ver todo →</Link>
           </div>
           <div style={styles.catGrid}>
-            {CATEGORIES.map(({ label, emoji, cat, color }) => (
+            {CATEGORIES.map(({ label, cat, color }) => (
               <Link key={cat} to={`/products?category=${cat}`} style={styles.catCard}>
                 <div style={{ ...styles.catIcon, background: `${color}18`, border: `1px solid ${color}30` }}>
-                  <span style={{ fontSize: 26 }}>{emoji}</span>
                 </div>
                 <span style={styles.catLabel}>{label}</span>
               </Link>
@@ -230,7 +229,7 @@ const Home = () => {
         {/* Featured Products */}
         <section style={styles.section}>
           <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>⭐ Productos Destacados</h2>
+            <h2 style={styles.sectionTitle}>Productos Destacados</h2>
             <Link to="/products" style={styles.seeAll}>Ver todos →</Link>
           </div>
           {loading ? (
@@ -256,13 +255,12 @@ const Home = () => {
         {/* Features strip */}
         <section style={styles.featuresStrip}>
           {[
-            { icon: "🚚", title: "Envío a todo el país", sub: "Correo argentino $15.000" },
-            { icon: "🏪", title: "Retiro gratis", sub: "Retirá en nuestra sucursal" },
-            { icon: "💬", title: "Soporte por WhatsApp", sub: "Respondemos en menos de 1 hora" },
-            { icon: "🔒", title: "Pago seguro", sub: "Tus datos siempre protegidos" },
-          ].map(({ icon, title, sub }) => (
+            { icon: null, title: "Envío a todo el país", sub: "Correo argentino $15.000" },
+            { icon: null, title: "Retiro gratis", sub: "Retirá en nuestra sucursal" },
+            { icon: null, title: "Soporte por WhatsApp", sub: "Respondemos en menos de 1 hora" },
+            { icon: null, title: "Pago seguro", sub: "Tus datos siempre protegidos" },
+          ].map(({ title, sub }) => (
             <div key={title} style={styles.featureItem}>
-              <span style={styles.featureIcon}>{icon}</span>
               <div>
                 <div style={styles.featureTitle}>{title}</div>
                 <div style={styles.featureSub}>{sub}</div>
