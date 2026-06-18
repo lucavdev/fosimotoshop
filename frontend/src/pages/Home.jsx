@@ -13,6 +13,7 @@ const PROMOS = [
     cta: "Ver cascos",
     link: "/products?category=cascos",
     badge: "OFERTA LIMITADA",
+    image: "/promo_casco.png",
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const PROMOS = [
     cta: "Ver escapes",
     link: "/products?category=escapes",
     badge: "NUEVO",
+    image: "/promo_escape.png",
   },
   {
     id: 3,
@@ -33,6 +35,7 @@ const PROMOS = [
     cta: "Ver indumentaria",
     link: "/products?category=indumentaria",
     badge: "DESTACADO",
+    image: "/promo_indumentaria.png",
   },
   {
     id: 4,
@@ -43,6 +46,7 @@ const PROMOS = [
     cta: "Ver protecciones",
     link: "/products?category=protecciones",
     badge: "SEGURIDAD",
+    image: "/promo_protecciones.png",
   },
 ];
 
@@ -91,6 +95,18 @@ const Carousel = ({ slides }) => {
             </button>
           </Link>
         </div>
+        {/* Product image on the right */}
+        {slide.image && (
+          <div style={cs.imgWrap}>
+            <div style={{ ...cs.imgGlow, background: `radial-gradient(circle, ${slide.accent}40 0%, transparent 70%)` }} />
+            <img
+              src={slide.image}
+              alt={slide.title}
+              style={cs.promoImg}
+              onError={(e) => { e.target.style.display = "none"; }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Controls */}
@@ -112,9 +128,9 @@ const Carousel = ({ slides }) => {
 
 const cs = {
   wrap: { position: "relative", borderRadius: "0 0 24px 24px", overflow: "hidden", marginBottom: 48 },
-  slide: { minHeight: 320, display: "flex", alignItems: "center", padding: "60px 32px", position: "relative" },
+  slide: { minHeight: 320, display: "flex", alignItems: "center", padding: "60px 32px", position: "relative", overflow: "hidden" },
   grid: { position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" },
-  content: { position: "relative", zIndex: 1, maxWidth: 600 },
+  content: { position: "relative", zIndex: 1, maxWidth: 520, flex: "0 0 auto" },
   badge: { display: "inline-block", border: "1px solid", padding: "3px 12px", borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: 1, marginBottom: 16 },
   title: { fontSize: "clamp(22px, 4vw, 38px)", fontWeight: 800, marginBottom: 12, lineHeight: 1.2, color: "#fff" },
   sub: { color: "#bbb", fontSize: "clamp(13px, 1.5vw, 16px)", marginBottom: 28, lineHeight: 1.6 },
@@ -122,6 +138,10 @@ const cs = {
   arrow: { position: "absolute", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", width: 40, height: 40, borderRadius: "50%", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10, transition: "background 0.2s" },
   dots: { position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6 },
   dot: { width: 8, height: 8, borderRadius: "50%", border: "none", cursor: "pointer", transition: "all 0.2s", padding: 0 },
+  // Product image on the right side of the slide
+  imgWrap: { position: "absolute", right: "clamp(20px, 6vw, 80px)", top: "50%", transform: "translateY(-50%)", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", width: "clamp(180px, 28vw, 280px)", height: "clamp(180px, 28vw, 280px)", pointerEvents: "none" },
+  imgGlow: { position: "absolute", inset: "-30%", borderRadius: "50%", filter: "blur(20px)", opacity: 0.8 },
+  promoImg: { position: "relative", width: "100%", height: "100%", objectFit: "contain", filter: "drop-shadow(0 12px 32px rgba(0,0,0,0.6))", zIndex: 1 },
 };
 
 const Home = () => {

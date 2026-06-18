@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminPanel from "./pages/AdminPanel";
 import UserOrders from "./pages/UserOrders";
+import Checkout from "./pages/Checkout";
 
 function AppContent() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -28,6 +29,7 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/orders" element={<UserOrders />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
       <WhatsAppButton />
     </>

@@ -1,12 +1,32 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { createOrder } from "../api";
 import { useAuth } from "./AuthContext";
 
 const CartContext = createContext(null);
 
+const CART_STORAGE_KEY = "fosimoto_cart";
+
 export const CartProvider = ({ children }) => {
   const { isLogged } = useAuth();
-  const [items, setItems] = useState([]);
+
+  // Initialize from localStorage
+  const [items, setItems] = useState(() => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Persist to localStorage on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      // ignore storage errors (e.g. private mode quota)
+    }
+  }, [items]);
 
   const addItem = (product) => {
     setItems((prev) => {
@@ -36,7 +56,7 @@ export const CartProvider = ({ children }) => {
   const total = subtotal;
   const count = items.reduce((acc, i) => acc + i.qty, 0);
 
-  const checkout = async ({ shippingType, province, city, address, postalCode, couponCode }) => {
+  const checkout = async ({ shippingType, province, city, address, postalCode, couponCode, paymentMethod, nombre, dni }) => {
     if (items.length === 0) return { success: false, message: "El carrito está vacío" };
     if (!isLogged) return { success: false, message: "Debés iniciar sesión para finalizar la compra" };
     try {
@@ -48,6 +68,9 @@ export const CartProvider = ({ children }) => {
         address,
         postalCode,
         couponCode,
+        paymentMethod,
+        nombre,
+        dni,
       });
       clearCart();
       return { success: true, order };
